@@ -1,7 +1,7 @@
 local foundCounter = 0
 
 local function checkCapacity(periph)
-local periphItems = periph.items()
+  local periphItems = periph.items()
   if periphItems[1] then
     print("items found")
     return true
@@ -17,17 +17,17 @@ local function energizerToChest(energizer, chest)
   if checkCapacity(energizer) then
     energizerItems = energizerItems[1] or {}
     energizerItem = energizerItems["name"] or {}
-    if energizerItem == "powah:uraninite" then
-      energizer.pushItem(peripheral.getName(chest), "powah:uraninite")
+    if energizerItem then
+      energizer.pushItem(peripheral.getName(chest),  energizerItem)
     end
   end
 end
 
 local function chestToEnergizer(energizer, chest)
-  if not checkCapacity(energizer) then 
-    for i=1, chest.size() do
+  if not checkCapacity(energizer) then
+    for i = 1, chest.size() do
       local item = chest.getItemDetail(i)
-      if item and string.find(item.name, "uraninite_ore") then
+      if item then
         print("Pushing item:" .. item.name .. " from chest to energizer")
         energizer.pullItem(peripheral.getName(chest), item.name, 1)
       end
@@ -36,13 +36,13 @@ local function chestToEnergizer(energizer, chest)
 end
 
 while true do
-  energizer = peripheral.find("powah:energizing_orb")
-  chest = peripheral.find("minecraft:chest")
+  local energizer = peripheral.find("powah:energizing_orb")
+  local chest = peripheral.find("minecraft:chest")
   chestToEnergizer(energizer, chest)
   energizerToChest(energizer, chest)
   os.sleep(4)
   if foundCounter == 10 then
     os.sleep(2000)
     foundCounter = 0
+  end
 end
-end  
